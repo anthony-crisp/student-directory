@@ -17,8 +17,10 @@ def print_header
 end
 
 def print(students)
-    students.each_with_index do |student, index|
-    puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)" if student[:name].size < 12
+    i = 0
+    until i == students.count
+    puts "#{i + 1}. #{students[i][:name]} (#{students[i][:cohort]} cohort)"
+    i += 1
   end
 end
 
