@@ -3,6 +3,7 @@
 def print_menu
     puts "Type '1' to input students"
     puts "Type '2' view students"
+    puts "Type '3' to save list to students.csv"
     puts "Type '9' to exit"
   end
 
@@ -12,6 +13,8 @@ def process(selection)
       input_students
     when "2"
       show_students
+    when "3"
+      save_students
     when "9"
       exit
     else
@@ -33,46 +36,17 @@ def interactive_menu
 end
 
 def input_students
-  puts "Please enter the names of the students and additional information."
+  puts "Please enter the names of the students."
   puts "To finish,  press Enter."
-  name = gets.chomp
-  puts "And their hobby?"
-  hobby = gets.chomp
-  puts "And their height?"
-  height = gets.chomp
-  puts "Their cohort?"
-  cohort = gets.chomp
-
   while !name.empty? do
-    @students << {
-      name: default(name),
-      cohort: default_cohort(cohort).to_sym.capitalize,
-      hobby: default(hobby),
-      height: default(height)
-  }
+    @students << { name: name, cohort: :november }
     if @students.count == 1
       puts "Now we have 1 student. Please enter another."
     else
     puts "Now we have #{@students.count} students. Please enter another."
   end
     name = gets.chomp
-    if !name.empty?
-    puts "And their hobby?"
-    hobby = gets.chomp
-    puts "And their height?"
-    height = gets.chomp
-    puts "Their cohort?"
-    cohort = gets.chomp
    end
-  end
-end
-
-def default(x)
-  if !x.empty?
-    x
-  else
-    "NA"
-  end
 end
 
 def print_header
@@ -80,18 +54,9 @@ def print_header
     puts "-------------".center(100)
 end
 
-def default_cohort(x)
-  month = %w(january february march april may june july august september october november december)
-  until month.include?(x.downcase)
-    puts "Not a recognised month, please try again"
-    x = gets.chomp
-  end
-  x
-end
-
 def print_students_list
   @students.each_with_index do |student, index|
-  puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort). Hobbies: #{student[:hobby]}. Height: #{student[:height]}.".center(100)
+  puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort).".center(100)
   end
 end
 
@@ -103,6 +68,16 @@ def print_footer
   else
     puts "No students enroled at this time.".center(100)
   end
+end
+
+def save_students
+  file = File.open("students.csv", "w")
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
 end
 
 interactive_menu
