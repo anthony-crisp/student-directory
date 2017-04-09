@@ -1,5 +1,17 @@
 @students = []
 
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist."
+    exit
+  end
+end
+
 def print_menu
     puts "Type '1' to input students"
     puts "Type '2' view students"
@@ -83,8 +95,8 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
     @students << {name: name, cohort: cohort.to_sym}
@@ -92,4 +104,5 @@ def load_students
   file.close
 end
 
+try_load_students
 interactive_menu
