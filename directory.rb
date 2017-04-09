@@ -1,40 +1,78 @@
-def interactive_menu
-  students = []
-  loop do
+@students = []
+
+def print_menu
     puts "Type '1' to input students"
     puts "Type '2' view students"
     puts "Type '9' to exit"
-    selection = gets.chomp
+  end
+
+def process(selection)
     case selection
     when "1"
-      students = input_students
+      input_students
     when "2"
-      print_header
-      print(students)
-      print_footer(students)
+      show_students
     when "9"
       exit
     else
       puts "I don't know what you mean. Try again."
-    end
+  end
+end
+
+def show_students
+  print_header
+  print_students_list
+  print_footer
+end
+
+def interactive_menu
+  loop do
+    print_menu
+    process(gets.chomp)
   end
 end
 
 def input_students
-    puts "Please enter the names of the students".center(100)
-    puts "To finish, just hit return twice".center(100)
-    students = []
-    name = gets.chomp
-    while !name.empty? do
-      students << {name: name,cohort: :November }
-      if students.count == 1
-        puts  "Now we have #{students.count} student.".center(100)
-      else
-        puts  "Now we have #{students.count} students.".center(100)
-      end
-      name = gets.chomp
+  puts "Please enter the names of the students and additional information."
+  puts "To finish,  press Enter."
+  name = gets.chomp
+  puts "And their hobby?"
+  hobby = gets.chomp
+  puts "And their height?"
+  height = gets.chomp
+  puts "Their cohort?"
+  cohort = gets.chomp
+
+  while !name.empty? do
+    @students << {
+      name: default(name),
+      cohort: default_cohort(cohort).to_sym.capitalize,
+      hobby: default(hobby),
+      height: default(height)
+  }
+    if @students.count == 1
+      puts "Now we have 1 student. Please enter another."
+    else
+    puts "Now we have #{@students.count} students. Please enter another."
   end
-    students
+    name = gets.chomp
+    if !name.empty?
+    puts "And their hobby?"
+    hobby = gets.chomp
+    puts "And their height?"
+    height = gets.chomp
+    puts "Their cohort?"
+    cohort = gets.chomp
+   end
+  end
+end
+
+def default(x)
+  if !x.empty?
+    x
+  else
+    "NA"
+  end
 end
 
 def print_header
@@ -42,19 +80,26 @@ def print_header
     puts "-------------".center(100)
 end
 
-def print(students)
-    i = 0
-    until i == students.count
-    puts "#{i + 1}. #{students[i][:name]} (#{students[i][:cohort]} cohort)".center(100)
-    i += 1
+def default_cohort(x)
+  month = %w(january february march april may june july august september october november december)
+  until month.include?(x.downcase)
+    puts "Not a recognised month, please try again"
+    x = gets.chomp
+  end
+  x
+end
+
+def print_students_list
+  @students.each_with_index do |student, index|
+  puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort). Hobbies: #{student[:hobby]}. Height: #{student[:height]}.".center(100)
   end
 end
 
-def print_footer(names)
-  if names.count == 1
-    puts "Overall, we have #{names.count} great student.".center(100)
+def print_footer
+  if @students.count == 1
+    puts "Overall, we have #{@students.count} great student.".center(100)
   elsif names.count >= 2
-    puts "Overall, we have #{names.count} great students.".center(101)
+    puts "Overall, we have #{@students.count} great students.".center(101)
   else
     puts "No students enroled at this time.".center(100)
   end
