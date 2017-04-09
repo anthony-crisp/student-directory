@@ -46,21 +46,23 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
 def input_students
   puts "Please enter the names of the students."
   puts "To finish,  press Enter."
+  name = STDIN.gets.chomp
   while !name.empty? do
+
     @students << { name: name, cohort: :november }
     if @students.count == 1
       puts "Now we have 1 student. Please enter another."
     else
     puts "Now we have #{@students.count} students. Please enter another."
   end
-    name = gets.chomp
+    name = STDIN.gets.chomp
    end
 end
 
